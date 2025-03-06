@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\build\Brewery_DB_Service.props" />
+</Project>
