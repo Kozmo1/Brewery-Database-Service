@@ -2,11 +2,13 @@ using Brewery_DB_Service.Data;
 using Brewery_DB_Service.Model;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Brewery_DB_Service.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class PaymentController : ControllerBase
     {
         private readonly AppDbContext _context;

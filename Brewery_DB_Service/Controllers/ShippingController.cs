@@ -31,13 +31,21 @@ namespace Brewery_DB_Service.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateShipment(int id, [FromBody] Shipping shipment)
+        public async Task<IActionResult> UpdateShipment(int id, [FromBody] ShippingUpdateDto updateDto)
         {
-            if (id != shipment.Id) return BadRequest();
             var existing = await _context.Shipping.FindAsync(id);
             if (existing == null) return NotFound();
-            existing.Status = shipment.Status;
-            existing.TrackingNumber = shipment.TrackingNumber;
+
+            // Apply updates if provided
+            if (updateDto.Status != null)
+            {
+                existing.Status = updateDto.Status;
+            }
+            if (updateDto.TrackingNumber != null)
+            {
+                existing.TrackingNumber = updateDto.TrackingNumber;
+            }
+
             await _context.SaveChangesAsync();
             return Ok(existing);
         }

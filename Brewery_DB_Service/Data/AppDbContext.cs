@@ -13,7 +13,6 @@ namespace Brewery_DB_Service.Data
         public DbSet<OrderItem> OrderItems { get; set; }
         public DbSet<Inventory> Inventory { get; set; }
         public DbSet<Payment> Payments { get; set; }
-        public DbSet<Content> Content { get; set; }
         public DbSet<Review> Reviews { get; set; }
         public DbSet<Cart> Cart { get; set; }
         public DbSet<Shipping> Shipping { get; set; }
@@ -35,12 +34,8 @@ namespace Brewery_DB_Service.Data
                 .OnDelete(DeleteBehavior.Cascade);
             modelBuilder.Entity<Cart>().HasKey(c => c.Id);
 
-
             modelBuilder.Entity<Inventory>().Property(i => i.Cost).HasPrecision(10, 2);
             modelBuilder.Entity<Inventory>().Property(i => i.Price).HasPrecision(10, 2);
-            // modelBuilder.Entity<Order>().Property(o => o.TotalPrice).HasPrecision(10, 2);
-            // modelBuilder.Entity<OrderItem>().Property(oi => oi.PriceAtOrder).HasPrecision(10, 2);
-            // modelBuilder.Entity<Payment>().Property(p => p.Amount).HasPrecision(10, 2);
         }
     }
 }

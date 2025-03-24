@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Brewery_DB_Service")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+5de3b5d49f99ab75e3da50496aea10ce485dc60e")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+faded7952d504952de9a3f7bbb5e32f0402ca668")]
 [assembly: System.Reflection.AssemblyProductAttribute("Brewery_DB_Service")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Brewery_DB_Service")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

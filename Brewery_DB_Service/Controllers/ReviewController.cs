@@ -2,9 +2,11 @@ using Brewery_DB_Service.Data;
 using Brewery_DB_Service.Model;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Brewery_DB_Service.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class ReviewsController : ControllerBase

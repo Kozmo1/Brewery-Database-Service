@@ -2,9 +2,11 @@ using Brewery_DB_Service.Data;
 using Brewery_DB_Service.Model;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Brewery_DB_Service.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class OrderController : ControllerBase
@@ -12,6 +14,32 @@ namespace Brewery_DB_Service.Controllers
         private readonly AppDbContext _context;
 
         public OrderController(AppDbContext context) => _context = context;
+
+        [HttpGet]
+        public async Task<IActionResult> GetAllOrders()
+        {
+            var orders = await _context.Orders.Include(o => o.Items).ToListAsync();
+            var response = orders.Select(order => new OrderResponse
+            {
+                Id = order.Id,
+                UserId = order.UserId,
+                TotalPrice = order.TotalPrice,
+                Status = order.Status,
+                CreatedAt = order.CreatedAt,
+                Items = order.Items.Select(i => new OrderItemResponse
+                {
+                    Id = i.Id,
+                    OrderId = i.OrderId,
+                    ProductId = i.ProductId,
+                    ProductName = i.ProductName,
+                    Quantity = i.Quantity,
+                    PriceAtOrder = i.PriceAtOrder
+                }).ToList()
+            }).ToList();
+
+            return Ok(response);
+        }
+
 
         [HttpPost]
         public async Task<IActionResult> CreateOrder([FromBody] OrderRequest request)
