@@ -12,8 +12,8 @@ namespace Brewery_DB_Service.Model
         public string Type { get; set; }
         [Required]
         public string Description { get; set; }
-        public float ABV { get; set; }
-        public float Volume { get; set; }
+        public double ABV { get; set; }
+        public double Volume { get; set; }
         public string Package { get; set; }
         public decimal Price { get; set; }
         public decimal Cost { get; set; }

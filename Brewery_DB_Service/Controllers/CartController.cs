@@ -2,11 +2,13 @@ using Brewery_DB_Service.Data;
 using Brewery_DB_Service.Model;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Brewery_DB_Service.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class CartController : ControllerBase
     {
         private readonly AppDbContext _context;
@@ -14,10 +16,18 @@ namespace Brewery_DB_Service.Controllers
         public CartController(AppDbContext context) => _context = context;
 
         [HttpPost("add")]
-        public async Task<IActionResult> AddToCart([FromBody] Cart cartItem)
+        public async Task<IActionResult> AddToCart([FromBody] CartRequest cartRequest)
         {
+            Console.WriteLine($"Received cartRequest: UserId={cartRequest.UserId}, InventoryId={cartRequest.InventoryId}, Quantity={cartRequest.Quantity}");
             if (!ModelState.IsValid) return BadRequest(ModelState);
-            var existing = await _context.Cart.FindAsync(cartItem.UserId, cartItem.InventoryId);
+            var cartItem = new Cart
+            {
+                UserId = cartRequest.UserId,
+                InventoryId = cartRequest.InventoryId,
+                Quantity = cartRequest.Quantity
+            };
+            var existing = await _context.Cart
+                .FirstOrDefaultAsync(c => c.UserId == cartItem.UserId && c.InventoryId == cartItem.InventoryId);
             if (existing != null)
             {
                 existing.Quantity += cartItem.Quantity;

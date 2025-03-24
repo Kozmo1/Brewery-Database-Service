@@ -2,11 +2,13 @@ using Brewery_DB_Service.Data;
 using Brewery_DB_Service.Model;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Brewery_DB_Service.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class InventoryController : ControllerBase
     {
         private readonly AppDbContext _context;
@@ -23,6 +25,7 @@ namespace Brewery_DB_Service.Controllers
         }
 
         [HttpGet("{id}")]
+        [AllowAnonymous]
         public async Task<IActionResult> GetProductById(int id)
         {
             var product = await _context.Inventory.FindAsync(id);
@@ -52,6 +55,7 @@ namespace Brewery_DB_Service.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public async Task<IActionResult> GetAllProducts()
         {
             return Ok(await _context.Inventory.ToListAsync());

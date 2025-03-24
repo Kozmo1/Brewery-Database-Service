@@ -1,13 +1,14 @@
 using Brewery_DB_Service.Model;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace Brewery_DB_Service.Data
 {
-    public class AppDbContext : DbContext
+    public class AppDbContext : IdentityDbContext<User, IdentityRole<int>, int>
     {
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
-        public DbSet<User> Users { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderItem> OrderItems { get; set; }
         public DbSet<Inventory> Inventory { get; set; }
@@ -19,10 +20,27 @@ namespace Brewery_DB_Service.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<User>().OwnsOne(u => u.TasteProfile);
+            base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<User>().OwnsOne(u => u.TasteProfile, tp =>
+            {
+                tp.Property(t => t.PrimaryFlavor).IsRequired(false);
+                tp.Property(t => t.Sweetness).IsRequired(false);
+                tp.Property(t => t.Bitterness).IsRequired(false);
+            });
             modelBuilder.Entity<Inventory>().OwnsOne(i => i.TasteProfile);
-            modelBuilder.Entity<OrderItem>().HasKey(oi => new { oi.OrderId, oi.ProductId });
-            modelBuilder.Entity<Cart>().HasKey(c => new { c.UserId, c.InventoryId });
+            modelBuilder.Entity<OrderItem>()
+                .HasOne<Order>()
+                .WithMany(o => o.Items)
+                .HasForeignKey(oi => oi.OrderId)
+                .OnDelete(DeleteBehavior.Cascade);
+            modelBuilder.Entity<Cart>().HasKey(c => c.Id);
+
+
+            modelBuilder.Entity<Inventory>().Property(i => i.Cost).HasPrecision(10, 2);
+            modelBuilder.Entity<Inventory>().Property(i => i.Price).HasPrecision(10, 2);
+            // modelBuilder.Entity<Order>().Property(o => o.TotalPrice).HasPrecision(10, 2);
+            // modelBuilder.Entity<OrderItem>().Property(oi => oi.PriceAtOrder).HasPrecision(10, 2);
+            // modelBuilder.Entity<Payment>().Property(p => p.Amount).HasPrecision(10, 2);
         }
     }
 }
